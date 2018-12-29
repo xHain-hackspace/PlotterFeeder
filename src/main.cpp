@@ -202,15 +202,17 @@ void loop() {
       send_buffered(rover);
       send_buffered(logo_for_rover);   
     }
+     /*else if(!digitalRead(BUT4_PIN)) {
+      digitalWrite(LED4_PIN,HIGH);
+      send_buffered(b1_sticker_color_a1); 
+      send_buffered(b1_sticker_color_a2); 
+      send_buffered(b1_sticker_color_b); 
+    }*/
     else if(!digitalRead(BUT5_PIN)) {
       digitalWrite(LED5_PIN,HIGH);
       send_buffered(cbase_flyer); 
     }
-    /*else if(!digitalRead(BUT5_PIN)) {
-      digitalWrite(LED5_PIN,HIGH);
-      send_buffered(b1_sticker_colour_a); 
-      send_buffered(b1_sticker_colour_b); 
-    }*/
+   
   }
 
 }
