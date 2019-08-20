@@ -191,26 +191,44 @@ void loop() {
       send_buffered(logo_for_vader);
     }else if(!digitalRead(BUT2_PIN)) {
       digitalWrite(LED2_PIN,HIGH);
-      send_buffered(xhain_flyer);
+      send_buffered(xHain_flyer_cccamp);
     }else if(!digitalRead(BUT3_PIN)){
       digitalWrite(LED3_PIN,HIGH);
       send_buffered(treeflyer_color_a);
       send_buffered(treeflyer_color_b);   
     }
-    else if(!digitalRead(BUT4_PIN)){
+    /*else if(!digitalRead(BUT4_PIN)){
       digitalWrite(LED4_PIN,HIGH);
       send_buffered(rover);
       send_buffered(logo_for_rover);   
-    }
+    }*/
      /*else if(!digitalRead(BUT4_PIN)) {
       digitalWrite(LED4_PIN,HIGH);
       send_buffered(b1_sticker_color_a1); 
       send_buffered(b1_sticker_color_a2); 
       send_buffered(b1_sticker_color_b); 
     }*/
-    else if(!digitalRead(BUT5_PIN)) {
+    /*else if(!digitalRead(BUT5_PIN)) {
       digitalWrite(LED5_PIN,HIGH);
       send_buffered(cbase_flyer); 
+    }*/
+    else if(!digitalRead(BUT4_PIN)) {
+      digitalWrite(LED5_PIN,HIGH);
+      send_buffered(dode_info_en1); 
+      send_buffered(dode_info_en2); 
+      send_buffered(dode_info_en3); 
+      send_buffered(dode_info_en4); 
+      send_buffered(dode_info_en5); 
+      send_buffered(dode_info_en_red); 
+    }
+    else if(!digitalRead(BUT5_PIN)) {
+      digitalWrite(LED5_PIN,HIGH);
+      send_buffered(dode_info_de1); 
+      send_buffered(dode_info_de2); 
+      send_buffered(dode_info_de3); 
+      send_buffered(dode_info_de4); 
+      send_buffered(dode_info_de5); 
+      send_buffered(dode_info_de_red); 
     }
    
   }
