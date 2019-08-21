@@ -192,6 +192,7 @@ void loop() {
     }else if(!digitalRead(BUT2_PIN)) {
       digitalWrite(LED2_PIN,HIGH);
       send_buffered(xHain_flyer_cccamp);
+      send_buffered(xHain_flyer_cccamp_party);
     }else if(!digitalRead(BUT3_PIN)){
       digitalWrite(LED3_PIN,HIGH);
       send_buffered(treeflyer_color_a);
@@ -217,8 +218,8 @@ void loop() {
       send_buffered(dode_info_en1); 
       send_buffered(dode_info_en2); 
       send_buffered(dode_info_en3); 
-      send_buffered(dode_info_en4); 
-      send_buffered(dode_info_en5); 
+      //send_buffered(dode_info_en4); 
+      //send_buffered(dode_info_en5); 
       send_buffered(dode_info_en_red); 
     }
     else if(!digitalRead(BUT5_PIN)) {
@@ -226,8 +227,8 @@ void loop() {
       send_buffered(dode_info_de1); 
       send_buffered(dode_info_de2); 
       send_buffered(dode_info_de3); 
-      send_buffered(dode_info_de4); 
-      send_buffered(dode_info_de5); 
+      //send_buffered(dode_info_de4); 
+      //send_buffered(dode_info_de5); 
       send_buffered(dode_info_de_red); 
     }
    
