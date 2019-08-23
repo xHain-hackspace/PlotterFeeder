@@ -260,8 +260,11 @@ void loop() {
       send_buffered(xHain_flyer_cccamp_party);
     }else if(!digitalRead(BUT3_PIN)){
       digitalWrite(LED3_PIN,HIGH);
-      send_buffered(treeflyer_color_a);
-      send_buffered(treeflyer_color_b);   
+      //send_buffered(treeflyer_color_a);
+      //send_buffered(treeflyer_color_b);   
+      send_buffered(dodekaeder1); 
+      send_buffered(dodekaeder2); 
+      send_buffered(dodekaeder3); 
     }
     /*else if(!digitalRead(BUT4_PIN)){
       digitalWrite(LED4_PIN,HIGH);
@@ -280,12 +283,18 @@ void loop() {
     }*/
     else if(!digitalRead(BUT4_PIN)) {
       digitalWrite(LED5_PIN,HIGH);
+      send_buffered(talk);
       send_buffered(dode_info_en1); 
       send_buffered(dode_info_en2); 
       send_buffered(dode_info_en3); 
       //send_buffered(dode_info_en4); 
       //send_buffered(dode_info_en5); 
       send_buffered(dode_info_en_red); 
+
+      //send_buffered(wurst_logo_gruen); 
+      //send_buffered(wurst_logo_rot); 
+      //send_buffered(wurst_logo_blau); 
+      //send_buffered(wurst_logo_gelb); 
     }
     else if(!digitalRead(BUT5_PIN)) {
       digitalWrite(LED5_PIN,HIGH);
@@ -293,8 +302,13 @@ void loop() {
       send_buffered(dode_info_de2); 
       send_buffered(dode_info_de3); 
       //send_buffered(dode_info_de4); 
-      //send_buffered(dode_info_de5); 
-      send_buffered(dode_info_de_red); 
+      //send_buffered(dode_info_de5);
+      send_buffered(dode_info_de_red);  
+      //send_buffered(wurst_gruen);
+      //send_buffered(wurst_rot); 
+      //send_buffered(wurst_blau); 
+      //send_buffered(wurst_gelb); 
+
     }
    
   }
