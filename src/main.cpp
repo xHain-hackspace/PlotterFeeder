@@ -1,5 +1,6 @@
 #include <Arduino.h>
 #include <HardwareSerial.h>
+#include <WiFi.h>
 #include "vectors.h"
 
 //Plotter Interface
@@ -25,6 +26,20 @@
 //Delay
 #define SWIPE_DELAY 50
 
+//WiFi
+#define WIFI_SSID "xHain Plotter"
+#define WIFI_PASSWORD "plotterpassword"
+#define WIFI_CHANNEL 5
+#define WIFI_MAX_CONNECTIONS 1
+#define LISTEN_PORT 1337
+#define WIFI_INPUT_BUFFER_SIZE 255
+
+IPAddress local_IP(192,168,4,1);
+IPAddress gateway(192,168,4,9);
+IPAddress subnet(255,255,255,0);
+WiFiServer wifiServer(LISTEN_PORT);
+WiFiClient client;
+char wifi_input_buffer[WIFI_INPUT_BUFFER_SIZE];
 
 HardwareSerial PlotterSerial(1);
 
@@ -52,6 +67,19 @@ void setup() {
   Serial.println("Starting up...");
 
   PlotterSerial.begin(9600, SERIAL_8N1, RX_IN_PIN, TX_OUT_PIN);//Baud,Mode, RX Pin (In), TX Pin (Out)
+
+  Serial.println("Starting Wifi...");
+  Serial.print("Setting soft-AP configuration ... ");
+  Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Ready" : "Failed!");
+
+  Serial.print("Setting soft-AP ... ");
+  Serial.println(WiFi.softAP(WIFI_SSID, WIFI_PASSWORD, WIFI_CHANNEL, false, WIFI_MAX_CONNECTIONS) ? "Ready" : "Failed!");
+
+  Serial.print("Soft-AP IP address = ");
+  Serial.println(WiFi.softAPIP());
+
+  Serial.println("Starting WiFi Server");
+  wifiServer.begin();
 }
 
 uint8_t button_pressed(){
@@ -62,29 +90,35 @@ uint8_t button_pressed(){
   else if(!digitalRead(BUT5_PIN)) return 5;
   else return 0;
 }
-
-void leds_flash_on_off(){
-  digitalWrite(LED1_PIN,HIGH);
-  digitalWrite(LED2_PIN,HIGH);
-  digitalWrite(LED3_PIN,HIGH);
-  digitalWrite(LED4_PIN,HIGH);
-  digitalWrite(LED5_PIN,HIGH);
-  delay(500);
+void leds_off(){
   digitalWrite(LED1_PIN,LOW);
   digitalWrite(LED2_PIN,LOW);
   digitalWrite(LED3_PIN,LOW);
   digitalWrite(LED4_PIN,LOW);
   digitalWrite(LED5_PIN,LOW);
+}
+
+void leds_on(){
+  digitalWrite(LED1_PIN,HIGH);
+  digitalWrite(LED2_PIN,HIGH);
+  digitalWrite(LED3_PIN,HIGH);
+  digitalWrite(LED4_PIN,HIGH);
+  digitalWrite(LED5_PIN,HIGH);
+}
+void leds_flash_on_off(){
+  leds_on();
+  delay(500);
+  leds_off();
   delay(500);
 }
 
-void leds_swipe_until_button_press(){
+void leds_swipe_until_user_input(){
   int leds[] = {LED1_PIN,LED2_PIN,LED3_PIN,LED4_PIN,LED5_PIN};
   int current_led=0;
   int current_swipe = 0;
 
   //do the effect
-  while(!button_pressed()){//return if pressed
+  while(!button_pressed() && !(client=wifiServer.available())){//return if pressed, or client connects, save client object
     
     //set the current led according to swipe
     if (current_swipe == 0) digitalWrite(leds[current_led],HIGH);
@@ -175,16 +209,47 @@ void print_id(){
 }
 
 void loop() {
+  int received_data_count = 0;
   
   for (int i = 0; i < 3; i++) leds_flash_on_off();
 
   while(1){
 
     //lure people close with flashing lights
-    leds_swipe_until_button_press();
-    delay(50); //debounce wait for the button
-    
+    leds_swipe_until_user_input();
+
+    //Check for client connection
+    if (client) {
+      Serial.println("Client connected");
+      leds_on();//indicate active connection      
+      while (client.connected()) {//while someone is connected
+        delay(10); //wait for some data to arrive
+        received_data_count = 0;        
+        while (client.available()>0 && received_data_count<(WIFI_INPUT_BUFFER_SIZE-1)) {//while data is available and input buffer not full
+          //put available char into input buffer
+          wifi_input_buffer[received_data_count] = client.read();  
+          received_data_count++;        
+        }
+        if (received_data_count > 0){//if something was received
+          //add extra null terminator for safety
+          wifi_input_buffer[received_data_count] = 0;
+          //send data to plotter
+          Serial.println("Received data over WiFi:");
+          Serial.println(wifi_input_buffer);
+          //Send data to plotter
+          send_buffered(wifi_input_buffer);
+          //send acknowledgement to that data was sent to plotter
+          if (client.connected()) client.write("OK");
+        }      
+      } //end while connection
+      client.stop();
+      client = 0; //reset global client variable
+      Serial.println("Client disconnected");
+      leds_off();//indicate disconnect
+    }//end if client
+
     //check what is pressed
+    delay(50); //debounce wait for the button
     if(!digitalRead(BUT1_PIN)) {
       digitalWrite(LED1_PIN,HIGH);
       send_buffered(vader);
