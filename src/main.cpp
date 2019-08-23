@@ -218,12 +218,14 @@ void loop() {
     }*/
     else if(!digitalRead(BUT4_PIN)) {
       digitalWrite(LED5_PIN,HIGH);
+      send_buffered(talk);
       send_buffered(dode_info_en1); 
       send_buffered(dode_info_en2); 
       send_buffered(dode_info_en3); 
       //send_buffered(dode_info_en4); 
       //send_buffered(dode_info_en5); 
       send_buffered(dode_info_en_red); 
+
       //send_buffered(wurst_logo_gruen); 
       //send_buffered(wurst_logo_rot); 
       //send_buffered(wurst_logo_blau); 
