@@ -186,18 +186,6 @@ void send_buffered(const char input_chars[]){
     while(digitalRead(CLEAR_TO_SEND_IN_PIN)) {delay(50);}//check if plotter is ready to receive new block
     PlotterSerial.write(fragment.c_str());//send block   
   }
-
-
-  
-  // for (int i=0; i<len; i+=max_bytes) {
-  //   wait_until_low(CLEAR_TO_SEND_IN_PIN);
-  //   readlen = len - i;
-  //   if (readlen > max_bytes) {
-  //     readlen = max_bytes;
-  //   }
-  //   fragment = input.substring(i, i+readlen);
-  //   PlotterSerial.write(fragment.c_str());
-  // }  
 }
 
 void print_id(){
@@ -206,6 +194,10 @@ void print_id(){
   delay(100);  
   Serial.println("Response:");
   Serial.println(PlotterSerial.readStringUntil('\r'));
+}
+
+void autofeed_paper(){
+  PlotterSerial.write("PG;");
 }
 
 void loop() {
@@ -254,63 +246,35 @@ void loop() {
       digitalWrite(LED1_PIN,HIGH);
       send_buffered(vader);
       send_buffered(logo_for_vader);
+      autofeed_paper();
     }else if(!digitalRead(BUT2_PIN)) {
       digitalWrite(LED2_PIN,HIGH);
       send_buffered(xHain_flyer_cccamp);
       send_buffered(xHain_flyer_cccamp_party);
+      autofeed_paper();
     }else if(!digitalRead(BUT3_PIN)){
       digitalWrite(LED3_PIN,HIGH);
-      //send_buffered(treeflyer_color_a);
-      //send_buffered(treeflyer_color_b);   
       send_buffered(dodekaeder1); 
       send_buffered(dodekaeder2); 
       send_buffered(dodekaeder3); 
+      autofeed_paper();
     }
-    /*else if(!digitalRead(BUT4_PIN)){
-      digitalWrite(LED4_PIN,HIGH);
-      send_buffered(rover);
-      send_buffered(logo_for_rover);   
-    }*/
-     /*else if(!digitalRead(BUT4_PIN)) {
-      digitalWrite(LED4_PIN,HIGH);
-      send_buffered(b1_sticker_color_a1); 
-      send_buffered(b1_sticker_color_a2); 
-      send_buffered(b1_sticker_color_b); 
-    }*/
-    /*else if(!digitalRead(BUT5_PIN)) {
-      digitalWrite(LED5_PIN,HIGH);
-      send_buffered(cbase_flyer); 
-    }*/
     else if(!digitalRead(BUT4_PIN)) {
       digitalWrite(LED5_PIN,HIGH);
       send_buffered(talk);
       send_buffered(dode_info_en1); 
       send_buffered(dode_info_en2); 
       send_buffered(dode_info_en3); 
-      //send_buffered(dode_info_en4); 
-      //send_buffered(dode_info_en5); 
       send_buffered(dode_info_en_red); 
-
-      //send_buffered(wurst_logo_gruen); 
-      //send_buffered(wurst_logo_rot); 
-      //send_buffered(wurst_logo_blau); 
-      //send_buffered(wurst_logo_gelb); 
+      autofeed_paper();
     }
     else if(!digitalRead(BUT5_PIN)) {
       digitalWrite(LED5_PIN,HIGH);
       send_buffered(dode_info_de1); 
       send_buffered(dode_info_de2); 
       send_buffered(dode_info_de3); 
-      //send_buffered(dode_info_de4); 
-      //send_buffered(dode_info_de5);
-      send_buffered(dode_info_de_red);  
-      //send_buffered(wurst_gruen);
-      //send_buffered(wurst_rot); 
-      //send_buffered(wurst_blau); 
-      //send_buffered(wurst_gelb); 
-
-    }
-   
+      send_buffered(dode_info_de_red); 
+      autofeed_paper(); 
+    }   
   }
-
 }
