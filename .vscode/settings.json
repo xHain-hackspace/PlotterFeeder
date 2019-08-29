@@ -1,6 +1,7 @@
 {
     "terminal.integrated.env.linux": {
-        "PATH": "/home/babbling/.platformio/penv/bin:/home/babbling/.platformio/penv:/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/lib/jvm/default/bin:/usr/bin/site_perl:/usr/bin/vendor_perl:/usr/bin/core_perl",
+        "PATH": "/home/user/.platformio/penv/bin:/home/user/.platformio/penv:/home/user/.local/bin:/home/user/.local/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games",
         "PLATFORMIO_CALLER": "vscode"
-    }
+    },
+    "python.pythonPath": "/usr/bin/python3"
 }

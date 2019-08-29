@@ -260,7 +260,7 @@ void loop() {
       autofeed_paper();
     }
     else if(!digitalRead(BUT4_PIN)) {
-      digitalWrite(LED5_PIN,HIGH);
+      digitalWrite(LED4_PIN,HIGH);
       send_buffered(dode_info_en1); 
       send_buffered(dode_info_en2); 
       send_buffered(dode_info_en3); 
