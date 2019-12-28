@@ -249,31 +249,32 @@ void loop() {
       autofeed_paper();
     }else if(!digitalRead(BUT2_PIN)) {
       digitalWrite(LED2_PIN,HIGH);
-      send_buffered(xHain_flyer_cccamp);
-      send_buffered(xHain_flyer_cccamp_party);
+      //send_buffered(xHain_flyer_cccamp);
+      //send_buffered(xHain_flyer_cccamp_party);
+      send_buffered(flyer_36c3);
       autofeed_paper();
     }else if(!digitalRead(BUT3_PIN)){
       digitalWrite(LED3_PIN,HIGH);
-      send_buffered(dodekaeder1); 
-      send_buffered(dodekaeder2); 
-      send_buffered(dodekaeder3); 
-      autofeed_paper();
+      //send_buffered(dodekaeder1); 
+      //send_buffered(dodekaeder2); 
+      //send_buffered(dodekaeder3); 
+      //autofeed_paper();
     }
     else if(!digitalRead(BUT4_PIN)) {
       digitalWrite(LED4_PIN,HIGH);
-      send_buffered(dode_info_en1); 
-      send_buffered(dode_info_en2); 
-      send_buffered(dode_info_en3); 
-      send_buffered(dode_info_en_red); 
-      autofeed_paper();
+      //send_buffered(dode_info_en1); 
+      //send_buffered(dode_info_en2); 
+      //send_buffered(dode_info_en3); 
+      //send_buffered(dode_info_en_red); 
+      //autofeed_paper();
     }
     else if(!digitalRead(BUT5_PIN)) {
       digitalWrite(LED5_PIN,HIGH);
-      send_buffered(dode_info_de1); 
-      send_buffered(dode_info_de2); 
-      send_buffered(dode_info_de3); 
-      send_buffered(dode_info_de_red); 
-      autofeed_paper(); 
+      //send_buffered(dode_info_de1); 
+      //send_buffered(dode_info_de2); 
+      //send_buffered(dode_info_de3); 
+      //send_buffered(dode_info_de_red); 
+      //autofeed_paper(); 
     }   
   }
 }
