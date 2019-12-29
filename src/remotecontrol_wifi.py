@@ -9,7 +9,7 @@ WIFI_INPUT_BUFFER_SIZE_ESP32 = 255 #must be the same as in esp32 plotterfeeder c
 
 SEND_DELAY =0.050 #seconds, for sending position to plotter
 JOYSTICK_DELAY = 0.005 #seconds, for handling jostick changes
-MAX_SPEED = 7500
+MAX_SPEED = 3000
 
 JOYSTICK_DEADZONE = 0.05 #+/- this value around the events = get_gamepad()middle position is ignored
 JOYSTICK_MIDDLE_VALUE = 0
@@ -53,6 +53,8 @@ sock.connect((host, port))#connect to plotter, TODO: this hangs on "no reply"
 
 last_joystick_poll_time = time.time()
 last_button_status = 0
+
+send_plotter("SP2;")#select pen
 
 while 1:
     #get joystick values
