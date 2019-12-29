@@ -1,1 +1,13 @@
-PA 0,0;PA 1000,1000;
+IN;SP2;
+
+PA5350,3750;CI400;CI800;CI1600;CI2400;
+
+PA500,200;LBTry to hit the target: Press button again to launch your arrow! Ready? ;
+LB3 ;
+LB2 ;
+LB1 ;
+LBGo! ;
+
+LB<-------<<;
+
+PA 0,0;

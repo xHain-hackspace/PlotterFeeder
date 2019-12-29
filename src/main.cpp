@@ -26,6 +26,9 @@
 //Delay
 #define SWIPE_DELAY 50
 
+//Dart Game
+#define DART_COUNTDOWN_DELAY 1000
+
 //WiFi
 #define WIFI_SSID "xHain Plotter"
 #define WIFI_PASSWORD "plotterpassword"
@@ -200,6 +203,61 @@ void autofeed_paper(){
   PlotterSerial.write("PG;");
 }
 
+void dart_game(){
+  uint target_middle_x =5350;
+  uint target_middle_y = 3750;
+  char stringBuffer[100];
+  //init/select pen
+  send_buffered("IN;SP2;");
+  //go to target position
+  sprintf(stringBuffer,"PA%d,%d;",target_middle_x,target_middle_y);
+  send_buffered(stringBuffer);
+  //draw target
+  send_buffered("CI400;CI800;CI1600;CI2400;");
+  //draw info text
+  send_buffered("PA500,200;LBTry to hit the target: Press button now to launch arrow. Press+hold again to hit the target.;");
+  delay(20000);//adjust this at least to the time it takes to plot the previous stuff
+  //go to "text view" position
+  //go to score position
+  sprintf(stringBuffer,"PA%d,%d;",100,7000);
+  send_buffered(stringBuffer);
+  //wait for button press and release
+  while(!button_pressed()){delay(50);}
+  while(button_pressed()){delay(50);}
+  // //draw countdown
+  // send_buffered("LB3   ;");
+  // delay(DART_COUNTDOWN_DELAY);
+  // send_buffered("LB2   ;");
+  // delay(DART_COUNTDOWN_DELAY);
+  // send_buffered("LB1   ;");
+  // delay(DART_COUNTDOWN_DELAY);
+  // send_buffered("LBGo! ;");
+  // delay(DART_COUNTDOWN_DELAY);
+  //move pen and wait for any button
+  uint current_position_x=target_middle_x;
+  uint current_position_y= target_middle_y;
+  while(!button_pressed()){
+    current_position_x = target_middle_x + random(-2400,2400);
+    current_position_y = target_middle_y + random(-2400,2400);
+    sprintf(stringBuffer,"PA%d,%d;",current_position_x,current_position_y);
+    send_buffered(stringBuffer);
+    delay(250);
+  }
+  //plot arrow
+  send_buffered("LB<-------<<;");
+  //determine score
+  int score = 3000- sqrt(pow(target_middle_x - current_position_x*1.0,2)+ pow(target_middle_y - current_position_y*1.0,2)*1.0);
+  //go to score position
+  sprintf(stringBuffer,"PA%d,%d;",1000,1000);
+  send_buffered(stringBuffer);
+  //plot score text
+  sprintf(stringBuffer,"LBYour score is: %d Thanks for playing. :)\n\nx-hain.de, Gruenberger Str. 16, 10243 Berlin;",score);
+  send_buffered(stringBuffer);
+  //eject paper
+  autofeed_paper();  
+  while(button_pressed());//wait for button to be released, so we dont immediately go to game again
+}
+
 void loop() {
   int received_data_count = 0;
   
@@ -255,6 +313,7 @@ void loop() {
       autofeed_paper();
     }else if(!digitalRead(BUT3_PIN)){
       digitalWrite(LED3_PIN,HIGH);
+      dart_game();
       //send_buffered(dodekaeder1); 
       //send_buffered(dodekaeder2); 
       //send_buffered(dodekaeder3); 
