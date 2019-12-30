@@ -234,19 +234,30 @@ void dart_game(){
   // send_buffered("LBGo! ;");
   // delay(DART_COUNTDOWN_DELAY);
   //move pen and wait for any button
-  uint current_position_x=target_middle_x;
-  uint current_position_y= target_middle_y;
-  while(!button_pressed()){
-    current_position_x = target_middle_x + random(-2400,2400);
-    current_position_y = target_middle_y + random(-2400,2400);
-    sprintf(stringBuffer,"PA%d,%d;",current_position_x,current_position_y);
-    send_buffered(stringBuffer);
-    delay(250);
+  uint score = 0;
+
+  uint current_position_x=0;
+  uint current_position_y=0;
+
+  for (int i=0; i<5; i++){
+    while(!button_pressed()){
+      current_position_x = target_middle_x + random(-2400,2400);
+      current_position_y = target_middle_y + random(-2400,2400);
+      sprintf(stringBuffer,"PA%d,%d;",current_position_x,current_position_y);
+      send_buffered(stringBuffer);
+      delay(250);
+    }
+  
+    //plot arrow
+    send_buffered("LB<-------<<;");
+    delay(1000);
+    //determine score
+    score += 3000- sqrt(pow(target_middle_x - current_position_x*1.0,2)+ pow(target_middle_y - current_position_y*1.0,2)*1.0);
+
+    // wait until button is released
+    while(button_pressed()){delay(50);}
   }
-  //plot arrow
-  send_buffered("LB<-------<<;");
-  //determine score
-  int score = 3000- sqrt(pow(target_middle_x - current_position_x*1.0,2)+ pow(target_middle_y - current_position_y*1.0,2)*1.0);
+
   //go to score position
   sprintf(stringBuffer,"PA%d,%d;",1000,1000);
   send_buffered(stringBuffer);
