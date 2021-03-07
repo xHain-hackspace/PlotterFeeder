@@ -1,4 +1,5 @@
 # PlotterFeeder
+## Overview 
 ESP32 Firmware to feed HPGL (a control language for plotters) to a pen plotter. For info about HPGL see wikipedia and 7550A_ProgrammingManual_OCR.pdf in this repo.
 
 This project uses an ESP32 board in connection with a suitable RS232 level shifter to control HP Plotters, in our case a HP 7550A. See https://www.sparkfun.com/tutorials/215 for details on why you need a level shifter.
@@ -15,4 +16,21 @@ There are multiple things that the code can do: standalone plot from flash, plot
 
 'Play games': Buttons can also trigger games if configured so in src/main.cpp. Instead of calling send_buffered() to send data from flash to the plotter, a game can be run when the corresponding button is pressed. dart_game() is a game where the plotter will draw a target and then rapidly move the pen randomly and when the user presses the button again, an arrow is 'shot' (=drawn) at the current position. The user can then 'shoot' a few more arrows and finally the achieved total score will be plotted and the paper ejected.
 
+## Testing Plotters via USB-Serial Adapters
+To test your designs via Inkscape plotter plugins or similar scripts, you can use an USB-serial adapter instead of the plotter feeder hardware and make a cable with the following connections. (These are an example, you might have to adapt them to your specific plotter.) Be aware that some cheap adapters will not produce the correct RS232 negative and positive voltages for this to work. E.g. they might produce 0V and +5V instead of -5V and +5V. If unsure, simply measure the voltages on the data lines of your adapter. This cable can be used with RTS/CTS flow control. Make sure your plotter is set up correctly, and also be aware of different pinout on different plotters, check e.g. chapter 16 in the programming manual: https://raw.githubusercontent.com/xHain-hackspace/PlotterFeeder/master/7550A_ProgrammingManual_OCR.pdf or the pinouts in the manual of your specific plotter. A good place to find manuals is the 'product documentation' link on the plotter sites at http://www.hpmuseum.net/exhibit.php?class=4&cat=24 .
+
+| D-sub 9 female connector (USB-serial Adapter side) pin number | D-sub 25 connector (plotter side, male for HP7470A, female for HP7550A) pin number |
+|---------------------------------------------------------------|---------------------------------------------------|
+| 1                                                             | no connection                                     |
+| 2 (RXD, to PC)                                                | 2 (TD, transmitted data, from plotter)            |
+| 3 (TXD, from PC)                                              | 3 (RD, received data, to plotter)                 |
+| 4                                                             | no connection                                     |
+| 5 (Ground)                                                    | 7 (SGND, signal ground)                           |
+| 6 (DSR, to PC)                                                | 4 (RTS, request to send, from plotter)            |
+| 7                                                             | no connection                                     |
+| 8 (CTS, to PC)                                                | 20 (DTR, data terminal ready, from plotter)       |
+| 9                                                             | no connection                                     |
+
+For HP7550A, you should use a *female* D-sub 25 connector on the *computer/modem* port. Set the plotter to the following settings:
+Standalone/Eavesdrop -> use Standalone, Remote/Local/Standby -> use Remote, use RTS/CTS flow control on the PC.
 
