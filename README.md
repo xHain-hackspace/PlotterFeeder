@@ -4,7 +4,7 @@ ESP32 Firmware to feed HPGL (a control language for plotters) to a pen plotter. 
 
 This project uses an ESP32 board in connection with a suitable RS232 level shifter to control HP Plotters, in our case a HP 7550A. See https://www.sparkfun.com/tutorials/215 for details on why you need a level shifter.
 
-Hardware documentation is currently missing, but it basically consists of 5 LEDs, 5 Buttons, and a RS232-to-TTL level shifter which interfaces to the plotters data-in, data-out, and buffer-full signal lines (plus ground connection). See the manual of your specific plotter to figure these out. You might also need to set the relevant configuration options on your plotter.
+Hardware basically consists of 5 LEDs, 5 Buttons, and a RS232-to-TTL level shifter which interfaces to the plotters data-in, data-out, and buffer-full signal lines (plus ground connection). There is a very rudimentary hardware documentation [in this folder](hardware).
 
 There are multiple things that the code can do: standalone plot from flash, plot via WiFi, remote control via Wifi, and play games.
 
