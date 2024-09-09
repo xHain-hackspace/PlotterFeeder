@@ -32,8 +32,8 @@
 //WiFi
 #define WIFI_MODE               WIFI_STA // WIFI_STA or WIFI_AP
 #define WIFI_SSID               "xHain"
-#define WIFI_PASSWORD           "please put password here"
-#error "Please update the password above and delete this line."
+//make sure to set the password in wifi_password.h
+#include "wifi_password.h"
 #define WIFI_INPUT_BUFFER_SIZE  255
 #define WIFI_CHANNEL            5
 #define WIFI_MAX_CONNECTIONS    1
