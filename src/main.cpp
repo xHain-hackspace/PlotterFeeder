@@ -30,21 +30,55 @@
 #define DART_COUNTDOWN_DELAY 1000
 
 //WiFi
-#define WIFI_SSID "xHain Plotter"
-#define WIFI_PASSWORD "plotterpassword"
-#define WIFI_CHANNEL 5
-#define WIFI_MAX_CONNECTIONS 1
-#define LISTEN_PORT 1337
-#define WIFI_INPUT_BUFFER_SIZE 255
+#define WIFI_MODE               WIFI_AP // WIFI_STA or WIFI_AP
+#define WIFI_SSID               "xHain Plotter"
+#define WIFI_PASSWORD           "plotterpassword"
+#define WIFI_INPUT_BUFFER_SIZE  255
+#define WIFI_CHANNEL            5
+#define WIFI_MAX_CONNECTIONS    1
+#define HOSTNAME                "hp7550"
+#define LISTEN_PORT             1337
 
 IPAddress local_IP(192,168,4,1);
-IPAddress gateway(192,168,4,9);
+IPAddress gateway(192,168,4,13);
 IPAddress subnet(255,255,255,0);
+
 WiFiServer wifiServer(LISTEN_PORT);
 WiFiClient client;
 char wifi_input_buffer[WIFI_INPUT_BUFFER_SIZE];
 
 HardwareSerial PlotterSerial(1);
+
+void wifi_ap() {
+  Serial.println("Starting Wifi...");
+  Serial.print("Setting soft-AP configuration ... ");
+  Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Ready" : "Failed!");
+
+  Serial.print("Setting soft-AP ... ");
+  Serial.println(WiFi.softAP(WIFI_SSID, WIFI_PASSWORD, WIFI_CHANNEL, false, WIFI_MAX_CONNECTIONS) ? "Ready" : "Failed!");
+
+  Serial.print("Soft-AP IP address = ");
+  Serial.println(WiFi.softAPIP());
+}
+
+void wifi_connect() {
+  Serial.print("Connecting to ");
+  Serial.print(WIFI_SSID);
+
+  WiFi.setHostname(HOSTNAME);
+  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
+  while (WiFi.status() != WL_CONNECTED) {
+      delay(500);
+      Serial.print(".");
+  }
+
+  Serial.println("");
+  Serial.println("WiFi connected");
+  Serial.print("Hostname: ");
+  Serial.println(HOSTNAME);
+  Serial.print("IP Address: ");
+  Serial.println(WiFi.localIP());
+}
 
 void setup() {
   //Configure Pins
@@ -71,17 +105,14 @@ void setup() {
 
   PlotterSerial.begin(9600, SERIAL_8N1, RX_IN_PIN, TX_OUT_PIN);//Baud,Mode, RX Pin (In), TX Pin (Out)
 
-  Serial.println("Starting Wifi...");
-  Serial.print("Setting soft-AP configuration ... ");
-  Serial.println(WiFi.softAPConfig(local_IP, gateway, subnet) ? "Ready" : "Failed!");
+  if (WIFI_MODE == WIFI_AP) {
+    wifi_ap();
+  } else {
+    wifi_connect();
+  }
 
-  Serial.print("Setting soft-AP ... ");
-  Serial.println(WiFi.softAP(WIFI_SSID, WIFI_PASSWORD, WIFI_CHANNEL, false, WIFI_MAX_CONNECTIONS) ? "Ready" : "Failed!");
-
-  Serial.print("Soft-AP IP address = ");
-  Serial.println(WiFi.softAPIP());
-
-  Serial.println("Starting WiFi Server");
+  Serial.print("Starting TCP server on port ");
+  Serial.println(LISTEN_PORT);
   wifiServer.begin();
 }
 
@@ -93,6 +124,7 @@ uint8_t button_pressed(){
   else if(!digitalRead(BUT5_PIN)) return 5;
   else return 0;
 }
+
 void leds_off(){
   digitalWrite(LED1_PIN,LOW);
   digitalWrite(LED2_PIN,LOW);
@@ -108,6 +140,7 @@ void leds_on(){
   digitalWrite(LED4_PIN,HIGH);
   digitalWrite(LED5_PIN,HIGH);
 }
+
 void leds_flash_on_off(){
   leds_on();
   delay(500);

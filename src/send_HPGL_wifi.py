@@ -29,8 +29,8 @@ f.close()
 
 #connect to plotter
 sock = socket.socket() 
-host = "192.168.4.1" #Plotter IP in local network
-port = 1337           #Plotter Server Port     
+host = "192.168.4.1" #Plotter Server Hostname or IP in local network
+port = 1337          #Plotter Server Port
 sock.connect((host, port))#connect to plotter, TODO: this hangs on "no reply"
  
 #send data in chunks
