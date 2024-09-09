@@ -30,13 +30,14 @@
 #define DART_COUNTDOWN_DELAY 1000
 
 //WiFi
-#define WIFI_MODE               WIFI_AP // WIFI_STA or WIFI_AP
-#define WIFI_SSID               "xHain Plotter"
-#define WIFI_PASSWORD           "plotterpassword"
+#define WIFI_MODE               WIFI_STA // WIFI_STA or WIFI_AP
+#define WIFI_SSID               "xHain"
+#define WIFI_PASSWORD           "please put password here"
+#error "Please update the password above and delete this line."
 #define WIFI_INPUT_BUFFER_SIZE  255
 #define WIFI_CHANNEL            5
 #define WIFI_MAX_CONNECTIONS    1
-#define HOSTNAME                "hp7550"
+#define HOSTNAME                "harryplotter"
 #define LISTEN_PORT             1337
 
 IPAddress local_IP(192,168,4,1);
