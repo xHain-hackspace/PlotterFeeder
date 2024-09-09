@@ -32,8 +32,7 @@
 //WiFi
 #define WIFI_MODE               WIFI_STA // WIFI_STA or WIFI_AP
 #define WIFI_SSID               "xHain"
-//make sure to set the password in wifi_password.h
-#include "wifi_password.h"
+#include "wifi_password.h" //make sure to create wifi_password.h, see wifi_password.h.example file
 #define WIFI_INPUT_BUFFER_SIZE  255
 #define WIFI_CHANNEL            5
 #define WIFI_MAX_CONNECTIONS    1
