@@ -37,7 +37,7 @@ def preview_notes_plotter(notes_list, portname, baud):
         if frequency == -1:
             time.sleep(duration)
         else:            
-            speed = 5*4*frequency/440 # cm/s, max 38.1, min 0.38 38 = 7700 Hz 5 1200,303. 10 1222
+            speed = 3.81*1.25*frequency/440 # cm/s, max 38.1, min 0.38 38 = 7700 Hz 5 1200,303. 10 1222
             print(speed)
             if speed > 38.1:
                 speed = 38.1
@@ -47,7 +47,7 @@ def preview_notes_plotter(notes_list, portname, baud):
                 print("Warning: speed min truncated")
 
 
-            duration_plotter = duration*0.9 # seconds            
+            duration_plotter = duration - 0.05 # seconds            
             # calculate travel in plotter units
             travel_mm = (speed * 10) * duration_plotter
             travel_pu = travel_mm / MM_PER_PLOTTER_UNIT 
@@ -72,9 +72,9 @@ def preview_notes_plotter(notes_list, portname, baud):
 
 midipath = os.path.expanduser('~/Downloads/test2.mid')
 #song = get_song_midi(midipath,8)
-song = get_song_twisst(9)
+song = get_song_twisst(33)
 
-preview_notes_speaker(song)
+#preview_notes_speaker(song)
 
 portname = "/dev/ttyUSB0"
 baud = 9600
