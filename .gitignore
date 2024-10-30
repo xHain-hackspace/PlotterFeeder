@@ -6,3 +6,4 @@
 .vscode/launch.json
 src/wifi_password.h
 .vscode/extensions.json
+__pycache__
