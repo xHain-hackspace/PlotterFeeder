@@ -408,7 +408,7 @@ def get_song_twisst(song_number):
     notes_list = []
 
     mysong = melody[song_number]
-    print(mysong[0]) # print title of the song to the shell 
+    #print(mysong[0]) # print title of the song to the shell 
     tempo = mysong[1] # get the tempo for this song from the melodies list 
 
     # iterate over the notes of the melody. 
