@@ -50,7 +50,7 @@ def preview_notes_speaker(notes_list):
         else:
             sine(frequency, duration)
 
-def preview_notes_plotter(notes_list, plotter, transpose_factor, transpose_offset, stop_after=None):
+def preview_notes_plotter(notes_list, plotter, transpose_factor, transpose_offset, start_at= None, stop_after=None):
     
     offset_other_axis = 0
     travel_limit = 4500
@@ -59,16 +59,23 @@ def preview_notes_plotter(notes_list, plotter, transpose_factor, transpose_offse
 
     MM_PER_PLOTTER_UNIT = 0.025 # mm/pu     # HP 7470A
     
-    plotter.write("IN;PD;".encode()) # init, pen down (else speed wont work)
+    plotter.write("IN;".encode()) # init
+    plotter.write(f"SP6;".encode()) # we hope pen 6 has the dummy pen
+    plotter.write("PD;".encode()) # pen down (else speed wont work)
     plotter.write(f"PA{offset_other_axis:.4f},{controlled_coordinate:.4f};".encode())
     #plotter.write(f"PA{controlled_coordinate:.4f},{offset_other_axis:.4f};".encode())
     time.sleep(1)
+    
+    
 
     for index, note in enumerate(notes_list):
         frequency = note[0]
         duration = note[1]
         duration = duration
+        print(index)
         
+        if start_at is not None and index < start_at:
+            continue
 
         if stop_after is not None and index > stop_after:
             break
@@ -115,9 +122,10 @@ def preview_notes_plotter(notes_list, plotter, transpose_factor, transpose_offse
             #plotter.write(f"PA{controlled_coordinate:.4f},{passive_coordinate:.4f};".encode())
     
 
-# midipath = os.path.expanduser('~/Downloads/darude-sandstorm.mid')
-# song = get_song_midi(midipath,5)
+#midipath = os.path.expanduser('~/Downloads/darude-sandstorm.mid')
+#song = get_song_midi(midipath,5)
 song = get_song_twisst(33)
+
 
 #preview_notes_speaker(song)
 
@@ -130,13 +138,13 @@ plotter = NetworkPlotter("harryplotter", 1337)
 
 transpose_factor = 5 * 8  / 440 #*0.25
 transpose_offset = 0
-stop_after = None
+start_at = None #100
+stop_after = 10 #140
 
 print(f"preview at offset {transpose_offset}, factor {transpose_factor}...")
 
 plotter.open() # not needed for serial, required for network
-
-preview_notes_plotter(song, plotter, transpose_factor, transpose_offset, stop_after)
+preview_notes_plotter(song, plotter, transpose_factor, transpose_offset, start_at, stop_after)
 plotter.close()
 
 
