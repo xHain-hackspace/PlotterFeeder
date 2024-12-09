@@ -34,6 +34,7 @@
 import inkex
 from inkex.ports import Serial
 from inkex.localization import inkex_gettext as _
+from os.path import expanduser
 
 import hpgl_encoder
 
@@ -138,8 +139,13 @@ class Plot(inkex.EffectExtension):
     def to_file(self, hpgl):
         """Output to hgpl to a a file port"""
         
-        inkex.utils.debug(self.options.filePath)
-        inkex.utils.debug(hpgl.encode('utf8'))
+        filepath = expanduser(self.options.filePath)
+        hpgl_data = hpgl #hpgl.encode('utf8')
+        with open(filepath, "w") as outfile:
+            outfile.write(hpgl_data)
+        inkex.utils.debug("Written file with contents:")
+        inkex.utils.debug(filepath)
+        inkex.utils.debug(hpgl_data)
 
 if __name__ == '__main__':
     Plot().run()
