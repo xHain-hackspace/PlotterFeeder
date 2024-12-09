@@ -122,34 +122,32 @@ def preview_notes_plotter(notes_list, plotter, transpose_factor, transpose_offse
             #plotter.write(f"PA{controlled_coordinate:.4f},{passive_coordinate:.4f};".encode())
     
 
-#midipath = os.path.expanduser('~/Downloads/darude-sandstorm.mid')
-#song = get_song_midi(midipath,5)
-song = get_song_twisst(33)
+def main():
+    #midipath = os.path.expanduser('~/Downloads/darude-sandstorm.mid')
+    #song = get_song_midi(midipath,5)
+    song = get_song_twisst(33)
+    
+    
+    #preview_notes_speaker(song)
+    
+    portname = "/dev/ttyUSB0"
+    baud = 9600
+    #plotter = serial.Serial(portname, baud, bytesize=8, parity='N', stopbits=serial.STOPBITS_ONE,
+    #                            timeout=5, xonxoff=False, rtscts=True)
+    
+    plotter = NetworkPlotter("harryplotter", 1337)
+    
+    transpose_factor = 5 * 8  / 440 #*0.25
+    transpose_offset = 0
+    start_at = None #100
+    stop_after = 127 #140
+    
+    print(f"preview at offset {transpose_offset}, factor {transpose_factor}...")
+    
+    plotter.open() # not needed for serial, required for network
+    preview_notes_plotter(song, plotter, transpose_factor, transpose_offset, start_at, stop_after)
+    plotter.write(f"SP1;PU;PA500,500;LBYou have been rickrolled by Harry Plotter at xHain. Have a great day! :) \n\rx-hain.de, Gruenberger Str 16, 10243 Berlin\x03;".encode())
+    plotter.close()
 
-
-#preview_notes_speaker(song)
-
-portname = "/dev/ttyUSB0"
-baud = 9600
-#plotter = serial.Serial(portname, baud, bytesize=8, parity='N', stopbits=serial.STOPBITS_ONE,
-#                            timeout=5, xonxoff=False, rtscts=True)
-
-plotter = NetworkPlotter("harryplotter", 1337)
-
-transpose_factor = 5 * 8  / 440 #*0.25
-transpose_offset = 0
-start_at = None #100
-stop_after = 127 #140
-
-print(f"preview at offset {transpose_offset}, factor {transpose_factor}...")
-
-plotter.open() # not needed for serial, required for network
-preview_notes_plotter(song, plotter, transpose_factor, transpose_offset, start_at, stop_after)
-plotter.write(f"SP1;PU;PA500,500;LBYou have been rickrolled by Harry Plotter at xHain. Have a great day! :) \n\rx-hain.de, Gruenberger Str 16, 10243 Berlin\x03;".encode())
-plotter.close()
-
-
-
-
-
-
+if __name__ == "__main__":
+    main()
