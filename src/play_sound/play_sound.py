@@ -21,6 +21,7 @@ class NetworkPlotter:
     def write(self, send_data):
         #send data in chunks
         #print("Sending data...")
+        #print(send_data.decode(), end="")
         for chunk in self._chunk_it(send_data, (self.WIFI_INPUT_BUFFER_SIZE_ESP32-1)):#dont forget added null terminator
             #print(chunk.decode("utf-8")) #print data that was sent
             self.socket.send(chunk)
@@ -60,6 +61,7 @@ def preview_notes_plotter(notes_list, plotter, transpose_factor, transpose_offse
     MM_PER_PLOTTER_UNIT = 0.025 # mm/pu     # HP 7470A
     
     plotter.write("IN;".encode()) # init
+    plotter.write("PA0,0;PA100,100;".encode()) # go to home, prevents paper jams in some cases
     plotter.write(f"SP6;".encode()) # we hope pen 6 has the dummy pen
     plotter.write("PD;".encode()) # pen down (else speed wont work)
     plotter.write(f"PA{offset_other_axis:.4f},{controlled_coordinate:.4f};".encode())
@@ -146,7 +148,7 @@ def main():
     
     plotter.open() # not needed for serial, required for network
     preview_notes_plotter(song, plotter, transpose_factor, transpose_offset, start_at, stop_after)
-    plotter.write(f"SP1;PU;PA500,500;LBYou have been rickrolled by Harry Plotter at xHain. Have a great day! :) \n\rx-hain.de, Gruenberger Str 16, 10243 Berlin\x03;".encode())
+    plotter.write(f"SP1;PU;PA500,500;LBYou have been rickrolled by Harry Plotter at xHain. Have a great day! :) \n\rVisit us at Garderobenfoyer 1 on 38C3 / x-hain.de / Gruenberger Str 16, 10243 Berlin\x03;".encode())
     plotter.close()
 
 if __name__ == "__main__":
