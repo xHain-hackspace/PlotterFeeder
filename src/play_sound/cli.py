@@ -43,7 +43,7 @@ def main():
     transpose_factor = 5 * 8  / 440 #*0.25
     transpose_offset = 0
     start_at = None #100
-    stop_after = 127 #140
+    stop_after = None #140
     print(f"preview at offset {transpose_offset}, factor {transpose_factor}...")
 
 
