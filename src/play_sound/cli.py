@@ -52,7 +52,6 @@ def main():
 
     plotter.open() # not needed for serial, required for network
     preview_notes_plotter(song, plotter, transpose_factor, transpose_offset, start_at, stop_after)
-    plotter.write(f"SP1;PU;PA500,500;LBYou have been rickrolled by Harry Plotter at xHain. Have a great day! :) \n\rx-hain.de, Gruenberger Str 16, 10243 Berlin\x03;".encode())
     plotter.close()
 
 
