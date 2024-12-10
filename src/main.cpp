@@ -365,11 +365,12 @@ void loop() {
     }
     else if(!digitalRead(BUT4_PIN)) {
       digitalWrite(LED4_PIN,HIGH);
+      send_buffered(rick); 
       //send_buffered(dode_info_en1); 
       //send_buffered(dode_info_en2); 
       //send_buffered(dode_info_en3); 
       //send_buffered(dode_info_en_red); 
-      //autofeed_paper();
+      autofeed_paper();
     }
     else if(!digitalRead(BUT5_PIN)) {
       digitalWrite(LED5_PIN,HIGH);
