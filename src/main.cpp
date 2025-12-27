@@ -30,7 +30,7 @@
 #define DART_COUNTDOWN_DELAY 1000
 
 //WiFi
-#define WIFI_MODE               WIFI_STA // WIFI_STA or WIFI_AP
+// WiFi mode is now selected via buttons in setup
 #define WIFI_SSID               "xHain"
 #include "wifi_password.h" //make sure to create wifi_password.h, see wifi_password.h.example file
 #define WIFI_INPUT_BUFFER_SIZE  255
@@ -46,6 +46,7 @@ IPAddress subnet(255,255,255,0);
 WiFiServer wifiServer(LISTEN_PORT);
 WiFiClient client;
 char wifi_input_buffer[WIFI_INPUT_BUFFER_SIZE];
+wifi_mode_t selected_wifi_mode = WIFI_OFF;
 
 HardwareSerial PlotterSerial(1);
 
@@ -78,42 +79,6 @@ void wifi_connect() {
   Serial.println(HOSTNAME);
   Serial.print("IP Address: ");
   Serial.println(WiFi.localIP());
-}
-
-void setup() {
-  //Configure Pins
-  pinMode(LED_BUILTIN, OUTPUT);
-  pinMode(CLEAR_TO_SEND_IN_PIN, INPUT);
-
-  pinMode(LED1_PIN, OUTPUT);
-  pinMode(LED2_PIN, OUTPUT);
-  pinMode(LED3_PIN, OUTPUT);
-  pinMode(LED4_PIN, OUTPUT);
-  pinMode(LED5_PIN, OUTPUT);
-
-  pinMode(BUT1_PIN, INPUT_PULLUP);
-  pinMode(BUT2_PIN, INPUT_PULLUP);
-  pinMode(BUT3_PIN, INPUT_PULLUP);
-  pinMode(BUT4_PIN, INPUT_PULLUP);
-  pinMode(BUT5_PIN, INPUT_PULLUP);
-
-  Serial.begin(9600);
-  while (!Serial) {
-    ; // wait for Serial port to connect.
-  }
-  Serial.println("Starting up...");
-
-  PlotterSerial.begin(9600, SERIAL_8N1, RX_IN_PIN, TX_OUT_PIN);//Baud,Mode, RX Pin (In), TX Pin (Out)
-
-  if (WIFI_MODE == WIFI_AP) {
-    wifi_ap();
-  } else {
-    wifi_connect();
-  }
-
-  Serial.print("Starting TCP server on port ");
-  Serial.println(LISTEN_PORT);
-  wifiServer.begin();
 }
 
 uint8_t button_pressed(){
@@ -300,6 +265,69 @@ void dart_game(){
   //eject paper
   autofeed_paper();  
   while(button_pressed());//wait for button to be released, so we dont immediately go to game again
+}
+
+void setup() {
+  //Configure Pins
+  pinMode(LED_BUILTIN, OUTPUT);
+  pinMode(CLEAR_TO_SEND_IN_PIN, INPUT);
+
+  pinMode(LED1_PIN, OUTPUT);
+  pinMode(LED2_PIN, OUTPUT);
+  pinMode(LED3_PIN, OUTPUT);
+  pinMode(LED4_PIN, OUTPUT);
+  pinMode(LED5_PIN, OUTPUT);
+
+  pinMode(BUT1_PIN, INPUT_PULLUP);
+  pinMode(BUT2_PIN, INPUT_PULLUP);
+  pinMode(BUT3_PIN, INPUT_PULLUP);
+  pinMode(BUT4_PIN, INPUT_PULLUP);
+  pinMode(BUT5_PIN, INPUT_PULLUP);
+
+  Serial.begin(9600);
+  while (!Serial) {
+    ; // wait for Serial port to connect.
+  }
+  Serial.println("Starting up...");
+
+  PlotterSerial.begin(9600, SERIAL_8N1, RX_IN_PIN, TX_OUT_PIN);//Baud,Mode, RX Pin (In), TX Pin (Out)
+
+  Serial.println("Waiting for WiFi Selection...");
+  // enable LEDs to signal choices
+  digitalWrite(LED1_PIN,HIGH);
+  digitalWrite(LED2_PIN,HIGH);
+  digitalWrite(LED3_PIN,HIGH);
+  //wait for button press
+  uint8_t button = 0;
+  unsigned long wifi_sel_start = millis();
+  while (!(button=button_pressed()) && ((millis()-wifi_sel_start) < 5000) )
+  {
+    delay(100);
+  }
+  leds_off();
+  delay(100);
+
+  //evaluate button press or timeout
+  switch(button)
+  {
+    case 1: selected_wifi_mode = WIFI_STA; break; // join network
+    case 2: selected_wifi_mode = WIFI_AP; break; // open own AP
+    case 3: selected_wifi_mode = WIFI_OFF; break; // WiFi off
+    default: selected_wifi_mode = WIFI_STA; break; // timeout default: join network
+  }
+
+  // check what wifi setup is needed and do it
+  if (selected_wifi_mode == WIFI_AP) {
+    wifi_ap();
+  } else if (selected_wifi_mode == WIFI_STA){
+    wifi_connect();
+  }
+
+  if (!(selected_wifi_mode == WIFI_OFF)){
+    Serial.print("Starting TCP server on port ");
+    Serial.println(LISTEN_PORT);
+    wifiServer.begin();
+  }
 }
 
 void loop() {
